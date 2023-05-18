@@ -1,0 +1,206 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public interface InterfaceForCollections
+{
+    void Add(byte item);
+    bool Remove(byte item);
+    bool Search(byte item);
+    void Display();
+}
+
+public class ByteHashSet : InterfaceForCollections
+{
+    private HashSet<byte> _set = new HashSet<byte>();
+
+    public void Add(byte item)
+    {
+        _set.Add(item);
+    }
+
+    public bool Remove(byte item)
+    {
+        return _set.Remove(item);
+    }
+
+    public bool Search(byte item)
+    {
+        return _set.Contains(item);
+    }
+
+    public void Display()
+    {
+        if (_set.Count == 0)
+        {
+            Console.WriteLine("Множина порожня!");
+        }
+        else
+        {
+            Console.WriteLine("Множина:");
+            Console.WriteLine(string.Join("; ", _set));
+        }
+    }
+}
+
+public class ByteArray : InterfaceForCollections
+{
+    private byte[] _array = new byte[0];
+
+    public void Add(byte item)
+    {
+        Array.Resize(ref _array, _array.Length + 1);
+        _array[_array.Length - 1] = item;
+    }
+
+    public bool Remove(byte item)
+    {
+        int index = Array.IndexOf(_array, item);
+        if (index < 0)
+            return false;
+
+        for (int i = index + 1; i < _array.Length; i++)
+            _array[i - 1] = _array[i];
+
+        Array.Resize(ref _array, _array.Length - 1);
+        return true;
+    }
+
+    public bool Search(byte item)
+    {
+        return Array.IndexOf(_array, item) >= 0;
+    }
+
+    public void Display()
+    {
+        if(_array.Length < 1)
+        {
+            Console.WriteLine("Масив порожній! Спочатку заповніть його!");
+        }
+        else
+        {
+            Console.WriteLine("Масив:");
+            Console.WriteLine(string.Join("; ", _array));
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+
+        InterfaceForCollections byteSet = new ByteHashSet();
+        InterfaceForCollections byteArray = new ByteArray();
+
+        bool exit = false;
+
+        while (!exit)
+        {
+            Console.WriteLine();
+            Console.WriteLine("1. Додати елементи у множину.");
+            Console.WriteLine("2. Видалити елемент із множини.");
+            Console.WriteLine("3. Пошук елемента у множині.");
+            Console.WriteLine("4. Вивести множину.");
+            Console.WriteLine("5. Додати елементи в масив.");
+            Console.WriteLine("6. Видалити елемент із масиву.");
+            Console.WriteLine("7. Пошук елемента у масиві.");
+            Console.WriteLine("8. Вивести масив.");
+            Console.WriteLine("0. Вихід.");
+            Console.WriteLine();
+            Console.Write("Ваш вибір: ");
+
+            string choice = Console.ReadLine();
+            Console.WriteLine();
+
+            switch (choice)
+            {
+                case "1":
+                    AddToCollection(byteSet, "множину");
+                    break;
+                case "2":
+                    RemoveFromCollection(byteSet, "множини", "множині");
+                    break;
+                case "3":
+                    CheckCollection(byteSet, "множині");
+                    break;
+                case "4":
+                    byteSet.Display();
+                    break;
+                case "5":
+                    AddToCollection(byteArray, "масив");
+                    break;
+                case "6":
+                    RemoveFromCollection(byteArray, "масиву", "масиві");
+                    break;
+                case "7":
+                    CheckCollection(byteArray, "масиві");
+                    break;
+                case "8":
+                    byteArray.Display();
+                    break;
+                case "0":
+                    exit = true;
+                    Console.WriteLine("Завершення програми...!");
+                    break;
+                default:
+                    Console.WriteLine("Неправильний вибір. Введіть число від 1 до 9.");
+                    break;
+            }
+        }
+    }
+    static void AddToCollection(InterfaceForCollections collection, string collectionName)
+    {
+        Console.WriteLine($"Додавання елементів у {collectionName}. Введіть 'stop', щоб завершити введення.");
+        while (true)
+        {
+            Console.WriteLine("Введіть ціле число типу byte:");
+            string input = Console.ReadLine();
+            if (input.ToLower() == "stop")
+                break;
+
+            byte value;
+            if (!byte.TryParse(input, out value))
+            {
+                Console.WriteLine("Неправильне значення! Введіть ціле число типу byte.");
+                continue;
+            }
+
+            collection.Add(value);
+        }
+    }
+
+    static void RemoveFromCollection(InterfaceForCollections collection, string collectionName, string collectionSecName)
+    {
+        Console.WriteLine($"Видалення елемента із {collectionName}. Вкажіть ціле число:");
+        byte value;
+        if (!byte.TryParse(Console.ReadLine(), out value))
+        {
+            Console.WriteLine("Неправильне значення! Введіть ціле число типу byte.");
+            return;
+        }
+
+        if (collection.Remove(value))
+            Console.WriteLine($"Число {value} було видалено із {collectionName}.");
+        else
+            Console.WriteLine($"Число {value} не було знайдено в {collectionSecName}.");
+    }
+
+    static void CheckCollection(InterfaceForCollections collection, string collectionName)
+    {
+        Console.WriteLine($"Перевірка наявності елемента в {collectionName}. Вкажіть ціле число:");
+        byte value;
+        if (!byte.TryParse(Console.ReadLine(), out value))
+        {
+            Console.WriteLine("Неправильне значення! Введіть ціле число типу byte.");
+            return;
+        }
+
+        if (collection.Search(value))
+            Console.WriteLine($"Число {value} знайдено в {collectionName}.");
+        else
+            Console.WriteLine($"Число {value} не знайдено в {collectionName}.");
+    }
+}
