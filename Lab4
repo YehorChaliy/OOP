@@ -1,0 +1,79 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+        static LinkedList<LinkedList<int>> GetVectors(char[] symbols)
+        {
+            LinkedList<LinkedList<int>> vectors = new LinkedList<LinkedList<int>>();
+            LinkedList<int> vector = null;
+
+            foreach (char symbol in symbols)
+            {
+                if (char.IsLetter(symbol))
+                {
+                    int asciiValue = (int)char.ToUpper(symbol);
+                    vector ??= new LinkedList<int>();
+                    vector.AddLast(asciiValue);
+                }
+                else if (char.IsNumber(symbol))
+                {
+                    int value = symbol;
+                    vector ??= new LinkedList<int>();
+                    vector.AddLast(value);
+                }
+                else if (symbol != ' ' && vector != null)
+                {
+                    vectors.AddLast(vector);
+                    vector = null;
+                }
+            }
+
+            if (vector != null)
+            {
+                vectors.AddLast(vector);
+            }
+
+            return vectors;
+        }
+
+        static LinkedList<int> VectorProduct(LinkedList<int> vector1, LinkedList<int> vector2)
+        {
+            if (vector1.Count != 3 || vector2.Count != 3)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Вектори повинні бути тривимірними. Вкажіть у файлі правильні значення.");
+                Environment.Exit(0);
+            }
+
+            LinkedList<int> result = new LinkedList<int>();
+            result.AddLast(vector1.ElementAt(1) * vector2.ElementAt(2) - vector1.ElementAt(2) * vector2.ElementAt(1));
+            result.AddLast(vector1.ElementAt(2) * vector2.ElementAt(0) - vector1.ElementAt(0) * vector2.ElementAt(2));
+            result.AddLast(vector1.ElementAt(0) * vector2.ElementAt(1) - vector1.ElementAt(1) * vector2.ElementAt(0));
+
+            return result;
+        }
+
+        string text = File.ReadAllText($@"{Environment.CurrentDirectory}\some.txt");
+        char[] symbols = text.ToCharArray();
+
+        LinkedList<LinkedList<int>> vectors = GetVectors(symbols);
+        LinkedList<int> vector1 = vectors.First.Value;
+        LinkedList<int> vector2 = vectors.Last.Value;
+        LinkedList<int> result = VectorProduct(vector1, vector2);
+
+        Console.WriteLine();
+        Console.WriteLine("Векторний добуток:");
+        foreach (int value in result)
+        {
+            Console.Write(value + "; ");
+        }
+        Console.WriteLine();
+    }
+}
