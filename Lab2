@@ -1,0 +1,620 @@
+using System;
+using System.Text;
+
+// Завдання 1: Знаходження середнього арифметичного
+class AverageCalculation
+{
+    public void FindAverage()
+    {
+
+        Console.WriteLine("Оберіть спосіб заповнення масиву:");
+        Console.WriteLine("1. Введення значень вручну.");
+        Console.WriteLine("2. Випадкове заповнення.");
+        Console.Write("Ваш вибір: ");
+        int choice = int.Parse(Console.ReadLine());
+
+        Console.Write("Введіть кількість чисел: ");
+        int n = int.Parse(Console.ReadLine());
+
+        double[] numbers = new double[n];
+
+        if (choice == 1)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write($"Введіть число {i + 1}: ");
+                numbers[i] = double.Parse(Console.ReadLine());
+            }
+        }
+        else if (choice == 2)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < n; i++)
+            {
+                numbers[i] = random.Next(1, 51);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неправильний вибір. Заповнення не виконано.");
+            return;
+        }
+
+        static void PrintArray(double[] numbers)
+        {
+            Console.WriteLine("Елементи заданого масиву:" + string.Join(", ", numbers));
+        }
+
+        Console.WriteLine();
+        PrintArray(numbers);
+
+        double total = 0;
+        for (int i = 0; i < n; i++)
+        {
+            total += numbers[i];
+        }
+
+        double average = total / n;
+
+        Console.WriteLine();
+        Console.WriteLine("Середнє арифметичне значення: " + average);
+    }
+}
+
+// Завдання 2: Знаходження суми векторів
+class VectorSumCalculation
+{
+    public void EnterVectors()
+    {
+
+        Console.WriteLine("Введіть вектор x:");
+        double[] x = CreateVector();
+
+        Console.WriteLine();
+        Console.WriteLine("Введіть вектор y:");
+        double[] y = CreateVector();
+
+        if (x.Length != y.Length)
+        {
+            Console.WriteLine("Помилка: розміри векторів не співпадають.");
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Вектор x:");
+        PrintVector(x);
+        Console.WriteLine("Вектор y:");
+        PrintVector(y);
+
+        double[] sum = new double[x.Length];
+        for (int i = 0; i < x.Length; i++)
+        {
+            sum[i] = x[i] + y[i];
+        }
+        Console.WriteLine();
+        Console.WriteLine("Сума векторів: " + string.Join(", ", sum));
+    }
+
+    private double[] CreateVector()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Оберіть спосіб заповнення вектора: ");
+        Console.WriteLine("1. Вручну.");
+        Console.WriteLine("2. Випадковими значеннями.");
+        Console.Write("Ваш вибір: ");
+
+        int choice = int.Parse(Console.ReadLine());
+
+        if (choice == 1)
+        {
+            return CreateVectorManually();
+        }
+        else if (choice == 2)
+        {
+            return CreateVectorRandomly();
+        }
+        else
+        {
+            Console.WriteLine("Неправильний вибір. Використовується випадкове заповнення вектора.");
+            return CreateVectorRandomly();
+        }
+    }
+
+    private double[] CreateVectorManually()
+    {
+        Console.Write("Кількість елементів вектора: ");
+        int n = int.Parse(Console.ReadLine());
+
+        double[] vector = new double[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            Console.Write($"Введіть елемент {i + 1}: ");
+            vector[i] = double.Parse(Console.ReadLine());
+        }
+
+        return vector;
+    }
+
+    private double[] CreateVectorRandomly()
+    {
+
+        Console.Write("Кількість елементів вектора: ");
+        int n = int.Parse(Console.ReadLine());
+
+        Random random = new Random();
+        double[] vector = new double[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            vector[i] = random.Next(1,51);
+        }
+
+        return vector;
+    }
+    private void PrintVector(double[] array)
+    {
+        Console.WriteLine(string.Join("; ", array));
+    }
+}
+
+// Завдання 3: Сортування масиву
+class ArraySort
+{
+    public void ArrSort()
+    {
+
+        Console.Write("Введіть кількість елементів масиву: ");
+        int n = int.Parse(Console.ReadLine());
+
+        int[] array = new int[n];
+
+        Console.WriteLine();
+        Console.WriteLine("Оберіть спосіб заповнення масиву:");
+        Console.WriteLine("1. Введення значень вручну.");
+        Console.WriteLine("2. Випадкове заповнення.");
+        Console.Write("Ваш вибір: ");
+        int choice = int.Parse(Console.ReadLine());
+
+        if (choice == 1)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write($"Введіть елемент {i + 1}: ");
+                array[i] = int.Parse(Console.ReadLine());
+            }
+        }
+        else if (choice == 2)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < n; i++)
+            {
+                array[i] = random.Next(1, 51);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неправильний вибір. Заповнення не виконано.");
+            return;
+        }
+
+        Console.WriteLine();
+        Console.Write("Невідсортований масив: ");
+        PrintArray(array);
+
+
+        QuickSort(array, 0, array.Length - 1); 
+
+        Console.WriteLine("Відсортований масив: " + string.Join("; ", array));
+    }
+
+    static void PrintArray(int[] array)
+    {
+        Console.WriteLine(string.Join("; ", array));
+    }
+    private void QuickSort(int[] array, int left, int right)
+    {
+        if (left < right)
+        {
+            int pivotIndex = Partition(array, left, right);
+
+            QuickSort(array, left, pivotIndex - 1);
+            QuickSort(array, pivotIndex + 1, right);
+        }
+    }
+
+    private int Partition(int[] array, int left, int right)
+    {
+        int pivot = array[right];
+        int i = left - 1;
+
+        for (int j = left; j < right; j++)
+        {
+            if (array[j] < pivot)
+            {
+                i++;
+                Swap(array, i, j);
+            }
+        }
+
+        Swap(array, i + 1, right);
+        return i + 1;
+    }
+
+    private void Swap(int[] array, int i, int j)
+    {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+    // Завдання 4: Розміщення елементів парних рядків у порядку зростання
+    public class PairedRowSort
+{
+        public void PairRowSort()
+        {
+            Console.Write("Введіть кількість рядків матриці: ");
+            int rowCount = int.Parse(Console.ReadLine());
+
+            Console.Write("Введіть кількість стовпців матриці: ");
+            int columnCount = int.Parse(Console.ReadLine());
+
+            int[,] matrix = new int[rowCount, columnCount];
+
+        Console.WriteLine();
+        Console.WriteLine("Оберіть спосіб заповнення масиву:");
+        Console.WriteLine("1. Введення значень вручну.");
+        Console.WriteLine("2. Випадкове заповнення.");
+        Console.Write("Ваш вибір: ");
+        int choice = int.Parse(Console.ReadLine());
+
+        if (choice == 1)
+        {
+            for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    Console.Write($"Введіть елемент [{i}, {j}]: ");
+                    matrix[i, j] = int.Parse(Console.ReadLine());
+                }
+            }
+        }
+        else if (choice == 2)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    matrix[i, j] = random.Next(1, 100);
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неправильний вибір. Заповнення не виконано.");
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Матриця з невідсортованими елементами парних рядків: ");
+        PrintMatrix(matrix);
+        Console.WriteLine();
+
+        for (int row = 1; row < rowCount; row += 2)
+            {
+                QuickSort(matrix, row, 0, columnCount - 1); 
+            }
+
+            Console.WriteLine("Матриця з відсортованими елементами парних рядків у порядку зростання:");
+            PrintMatrix(matrix);
+        }
+
+        private void QuickSort(int[,] matrix, int row, int left, int right)
+        {
+            if (left < right)
+            {
+                int pivotIndex = Partition(matrix, row, left, right);
+
+                QuickSort(matrix, row, left, pivotIndex - 1);
+                QuickSort(matrix, row, pivotIndex + 1, right);
+            }
+        }
+
+        private int Partition(int[,] matrix, int row, int left, int right)
+        {
+            int pivot = matrix[row, right];
+            int i = left - 1;
+
+            for (int j = left; j < right; j++)
+            {
+                if (matrix[row, j] < pivot)
+                {
+                    i++;
+                    Swap(matrix, row, i, j);
+                }
+            }
+
+            Swap(matrix, row, i + 1, right);
+            return i + 1;
+        }
+
+        private void Swap(int[,] matrix, int row, int i, int j)
+        {
+            int temp = matrix[row, i];
+            matrix[row, i] = matrix[row, j];
+            matrix[row, j] = temp;
+        }
+
+        public virtual void PrintMatrix(int[,] matrix)
+        {
+
+            int rowCount = matrix.GetLength(0);
+            int columnCount = matrix.GetLength(1);
+
+        Console.WriteLine();
+
+        for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    Console.Write(matrix[i, j] + "\t");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
+
+    // Завдання 5: Кількість рядків без нульових елементів
+    class NonZeroRowCount: PairedRowSort
+{
+        public void NonZeroRowsFind()
+        {
+            Console.Write("Введіть кількість рядків матриці: ");
+            int row = int.Parse(Console.ReadLine());
+
+            Console.Write("Введіть кількість стовпців матриці: ");
+            int column = int.Parse(Console.ReadLine());
+
+            int[,] recMatrix = new int[row, column];
+
+        Console.WriteLine();
+        Console.WriteLine("Оберіть спосіб заповнення масиву:");
+        Console.WriteLine("1. Введення значень вручну.");
+        Console.WriteLine("2. Випадкове заповнення.");
+        Console.Write("Ваш вибір: ");
+        int choice = int.Parse(Console.ReadLine());
+
+        if (choice == 1)
+        {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    Console.Write($"Введіть елемент [{i}, {j}]: ");
+                    recMatrix[i, j] = int.Parse(Console.ReadLine());
+                }
+            }
+        }
+        else if (choice == 2)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    recMatrix[i, j] = random.Next(0, 100);
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неправильний вибір. Заповнення не виконано.");
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Отримуємо матрицю:");
+        PrintMatrix(recMatrix);
+
+        int rowsWithoutZeros = 0;
+
+            for (int i = 0; i < row; i++)
+            {
+                bool hasZero = false;
+
+                for (int j = 0; j < column; j++)
+                {
+                    if (recMatrix[i, j] == 0)
+                    {
+                        hasZero = true;
+                        break;
+                    }
+                }
+
+                if (!hasZero)
+                {
+                    rowsWithoutZeros++;
+                }
+            }
+
+        Console.WriteLine();
+        Console.WriteLine("Кількість рядків без нульових елементів: " + rowsWithoutZeros);
+        }
+    public override void PrintMatrix(int[,] recMatrix)
+    {
+        base.PrintMatrix(recMatrix);
+    }
+}
+
+// Завдання 6: Максимальне число, яке зустрічається більше одного разу
+class MaxRepeatedNumber: PairedRowSort
+{
+    public void MaxRepeatedNumberFind()
+    {
+        Console.Write("Введіть кількість рядків матриці: ");
+        int row = int.Parse(Console.ReadLine());
+
+        Console.Write("Введіть кількість стовпців матриці: ");
+        int column = int.Parse(Console.ReadLine());
+
+        int[,] recMatrix = new int[row, column];
+
+        Console.WriteLine();
+        Console.WriteLine("Оберіть спосіб заповнення масиву:");
+        Console.WriteLine("1. Введення значень вручну.");
+        Console.WriteLine("2. Випадкове заповнення.");
+        Console.Write("Ваш вибір: ");
+        int choice = int.Parse(Console.ReadLine());
+
+        if (choice == 1)
+        {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    Console.Write($"Введіть елемент [{i}, {j}]: ");
+                    recMatrix[i, j] = int.Parse(Console.ReadLine());
+                }
+            }
+        }
+        else if (choice == 2)
+        {
+            Random random = new Random();
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    recMatrix[i, j] = random.Next(1, 100);
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неправильний вибір. Заповнення не виконано.");
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Отримуємо матрицю:");
+        PrintMatrix(recMatrix);
+
+        int maxValue = int.MinValue;
+        int maxNumber = 0;
+
+        // Знаходження макс value в матриці
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < column; j++)
+            {
+                if (recMatrix[i, j] > maxValue)
+                {
+                    maxValue = recMatrix[i, j];
+                }
+            }
+        }
+
+        int[] counts = new int[maxValue + 1];
+        int maxCount = 0;
+
+        // Зчитуємо кількість входження кожного числа
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < column; j++)
+            {
+                int number = recMatrix[i, j];
+                counts[number]++;
+
+                if (counts[number] >= maxCount)
+                {
+                    maxCount = counts[number];
+                    maxNumber = number;
+                }
+            }
+        }
+        if (maxCount == 1)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Немає чисел, які зустрічаються більше одного разу.");
+        }
+        else
+        {
+            Console.WriteLine();
+            Console.WriteLine("Максимальне число, яке зустрічається більше одного разу: " + maxNumber);
+        }
+    }
+    public override void PrintMatrix(int[,] recMatrix)
+    {
+        base.PrintMatrix(recMatrix);
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+
+        bool exit = false;
+
+        while (!exit)
+        {
+            Console.WriteLine("Оберіть завдання для виконання:");
+            Console.WriteLine("1. Знаходження середнього арифметичного.");
+            Console.WriteLine("2. Знаходження суми векторів.");
+            Console.WriteLine("3. Сортування масиву.");
+            Console.WriteLine("4. Розміщення елементів парних рядків у порядку зростання.");
+            Console.WriteLine("5. Кількість рядків без нульових елементів.");
+            Console.WriteLine("6. Максимальне число, яке зустрічається більше одного разу.");
+            Console.WriteLine("0. Вийти.");
+            Console.WriteLine();
+            Console.Write("Ваш вибір: ");
+
+            string choice = Console.ReadLine();
+            Console.WriteLine();
+
+            switch (choice)
+            {
+                case "1":
+                    AverageCalculation averageCalculation = new AverageCalculation();
+                    averageCalculation.FindAverage();
+                    break;
+                case "2":
+                    VectorSumCalculation vectorSumCalculation = new VectorSumCalculation();
+                    vectorSumCalculation.EnterVectors();
+                    break;
+                case "3":
+                    ArraySort arraySort = new ArraySort();
+                    arraySort.ArrSort();
+                    break;
+                case "4":
+                    PairedRowSort pairedRowSort = new PairedRowSort();
+                    pairedRowSort.PairRowSort();
+                    break;
+                case "5":
+                    NonZeroRowCount nonZeroRowCount = new NonZeroRowCount();
+                    nonZeroRowCount.NonZeroRowsFind();
+                    break;
+                case "6":
+                    MaxRepeatedNumber maxRepeatedNumber = new MaxRepeatedNumber();
+                    maxRepeatedNumber.MaxRepeatedNumberFind();
+                    break;
+                case "0":
+                    exit = true;
+                    Console.WriteLine("Завершення програми...!");
+                    break;
+                default:
+                    Console.WriteLine("Неправильний вибір. Спробуйте ще раз.");
+                    break;
+            }
+
+            Console.WriteLine();
+        }
+    }
+}
